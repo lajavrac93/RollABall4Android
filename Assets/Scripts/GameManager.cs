@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     //Establecer el objeto punto para poder instanciarlo facilmente
     [SerializeField]
     private GameObject puntoPrefab;
+    [SerializeField]
+    private float speedRespawnPuntos;
 
     //variable que controla la puntuación
     private int puntos, maxPuntos;
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
             maxPuntos = puntos;
             textPuntuacionMaxima.text = "Best: " + maxPuntos.ToString();
         }
-        StartCoroutine(waitSecondsPuntosRespawn(2f));
+        StartCoroutine(waitSecondsPuntosRespawn(speedRespawnPuntos));
     }
     //Metodo que con un tiempo instancia después del mismo el objeto del prefab introducido, en este caso Punto
     private IEnumerator waitSecondsPuntosRespawn(float seconds)
