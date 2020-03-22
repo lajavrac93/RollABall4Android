@@ -16,7 +16,10 @@ public class GameManager : MonoBehaviour
     private int puntos, maxPuntos;
 
     private void Start()
-    {   
+    {
+        //establecer que no se quede inactiva la pantalla
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
         puntos = 0;
         if (PlayerPrefs.HasKey("bestScore") == true)
         {
