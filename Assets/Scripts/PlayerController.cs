@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float speed = 5f;
     [SerializeField]
-    TextMeshProUGUI textCronometro;
+    TextMeshProUGUI textCronometro, textInformativeGameover;
     [SerializeField]
     GameObject textGameOver, textStart;
 
@@ -47,8 +47,9 @@ public class PlayerController : MonoBehaviour
             }
 
             Vector3 movementDirection = Vector3.zero;
-            movementDirection.x = Input.GetAxis("Horizontal");
-            movementDirection.z = Input.GetAxis("Vertical");
+            movementDirection.x = Input.acceleration.x;  //Input.GetAxis("Horizontal");
+            movementDirection.z = Input.acceleration.y; //Input.GetAxis("Vertical");
+          
             movementDirection.Normalize();
             if (movementDirection.magnitude > 0)
             {
@@ -72,10 +73,7 @@ public class PlayerController : MonoBehaviour
     {
         textGameOver.SetActive(true);
         paused = true;
-        StartCoroutine(waitToKeyPress());
-        
-        
-        
+        StartCoroutine(waitToKeyPress());    
     }
     //metodo que maneja el tiempo de espera para empezar, y así prepararse.
     private IEnumerator waitSecondsStarting(float seconds)
@@ -88,6 +86,7 @@ public class PlayerController : MonoBehaviour
     //Metodo para que se espere hasta que se pulsa una tecla y tras esto iniciar de nuevo el juego
     private IEnumerator waitToKeyPress()
     {
+        StartCoroutine(waitToShowInfo());
         while (!Input.anyKeyDown)
         {
             yield return null;
@@ -95,5 +94,13 @@ public class PlayerController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
+
+    //Metodo para mostrar el mensaje informativo después de unos segundos
+    private IEnumerator waitToShowInfo()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        textInformativeGameover.enabled=true;
+    }
+
 
 }
