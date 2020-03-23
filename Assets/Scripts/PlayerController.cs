@@ -81,9 +81,14 @@ public class PlayerController : MonoBehaviour
     //Metodo que hace desaparecer las letras inciales, y despausa el juego.
     private void endTextStart()
     {
-        textStart.SetActive(false);
+        StartCoroutine(genericWaitSeconds(1f, disbleTextStart));
         paused = false;
         rb = GetComponent<Rigidbody>();
+
+        void disbleTextStart()
+        {
+            textStart.SetActive(false);
+        }
     }
     //Metodo para que se espere hasta que se pulsa una tecla y tras esto iniciar de nuevo el juego
     private IEnumerator waitToKeyPress()
