@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float speedTimer, sumTime, secondsTimer;
     private static bool paused = true;
+    private delegate void DelegatedFunction();
     private void Start()
     {
         //crono
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
             sumTime = 0f;
             secondsTimer = 60f;
         }
-        showStarDown();
+        StartCoroutine(genericWaitSeconds(3f, endTextStart));
 
     }
 
@@ -62,12 +63,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    //Con el juego pausado en el inicio, muestra la cuenta regresiva y después inicia el juego
-    public void showStarDown()
-    {
-        StartCoroutine(waitSecondsStarting(3f));
-        
-    }
+    
     //Metodo que maneja que ocurre al final del juego
     public void customGameOver()
     {
@@ -75,10 +71,16 @@ public class PlayerController : MonoBehaviour
         paused = true;
         StartCoroutine(waitToKeyPress());    
     }
-    //metodo que maneja el tiempo de espera para empezar, y así prepararse.
-    private IEnumerator waitSecondsStarting(float seconds)
+    //metodo generico para introducir una espera y una accion (función) tras la misma
+    private IEnumerator genericWaitSeconds(float seconds, DelegatedFunction funtion)
     {
         yield return new WaitForSecondsRealtime(seconds);
+        funtion();
+    }
+
+    //Metodo que hace desaparecer las letras inciales, y despausa el juego.
+    private void endTextStart()
+    {
         textStart.SetActive(false);
         paused = false;
         rb = GetComponent<Rigidbody>();
@@ -86,7 +88,7 @@ public class PlayerController : MonoBehaviour
     //Metodo para que se espere hasta que se pulsa una tecla y tras esto iniciar de nuevo el juego
     private IEnumerator waitToKeyPress()
     {
-        StartCoroutine(waitToShowInfo());
+        StartCoroutine(genericWaitSeconds(2f,showInfo));
         while (!Input.anyKeyDown)
         {
             yield return null;
@@ -96,9 +98,8 @@ public class PlayerController : MonoBehaviour
     }
 
     //Metodo para mostrar el mensaje informativo después de unos segundos
-    private IEnumerator waitToShowInfo()
+    private void showInfo()
     {
-        yield return new WaitForSecondsRealtime(2f);
         textInformativeGameover.enabled=true;
     }
 
